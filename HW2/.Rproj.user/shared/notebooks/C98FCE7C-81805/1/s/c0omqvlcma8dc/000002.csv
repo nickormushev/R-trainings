@@ -1,0 +1,4 @@
+"0","versicolor <- iris[iris$Species == ""versicolor"", ]"
+"0","virginica <- iris[iris$Species == ""virginica"", ]"
+"0",""
+"0","hist(versicolor$Sepal.Width)"

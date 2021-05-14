@@ -1,0 +1,292 @@
+---
+title: "Домашно 1"
+output: pdf_document
+header-includes:
+   - \usepackage[T2A]{fontenc}
+   - \usepackage[utf8]{inputenc}
+   - \usepackage[russian]{babel}
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Домашно номер 1 
+
+### Николай Кормушев 81805.
+
+```{r}
+library("ggplot2")
+library("tidyverse")
+colnames(diamonds)
+```
+
+### Задача 1 
+
+#### a)
+
+```{r}
+above15000 <- nrow(diamonds[diamonds$price > 15000,])
+above15000
+```
+
+#### б)
+
+```{r}
+nrow(diamonds[diamonds$carat < 2 & diamonds$price > 15000,])/above15000
+```
+
+#### в)
+
+```{r}
+m <- mean(diamonds$price)
+s <- sd(diamonds$price)
+nrow(diamonds[diamonds$price < m + s & diamonds$price > m - s,])
+```
+
+#### г)
+
+```{r}
+ideal <- diamonds[diamonds$cut == "Ideal",]
+quantile(ideal$carat)
+median(ideal$carat)
+mean(ideal$carat)
+```
+
+#### д) 
+
+Цена, такава че 80% от диамантите са под нея
+
+```{r}
+quantile(diamonds$price, prob = 0.8)
+```
+
+#### е) 
+
+Диаманите сортирани по x, y, z
+
+```{r}
+diamonds[order(diamonds$x, diamonds$y, diamonds$z, decreasing = T),][1:5,]
+```
+
+### Задача 2
+
+#### а)
+
+```{r}
+hist(diamonds$price, probability = T, main = "Histogram of diamonds price", xlab = "Price")
+lines(density(diamonds$price))
+```
+
+#### б) 
+
+Долният barplot показва условнаta вероятност, aко знаем каква е
+шлифовката каква е вероятността да имаме диамант с дадена чистота.
+Чистотата е подредена по качество. Тоест най-долу на легендата е
+най-хубава(IF), a най-горе е най-лоша(I1). На диаграмата се вижда, че
+колкото по-добра е шлифовката толкова по-висока е вероятността диамантът
+да е с по-хубава чистота. Тоест ако шлифовката е идеално е доста
+по-вероятно да имаме супер чист(IF) диамант отколкото, ако е
+ставаща(Fair)
+
+```{r}
+barplot(prop.table(table(diamonds$clarity, diamonds$cut), 2), legend = T, 
+        beside = T, col = c("grey", "black", "purple", "blue", "green", 
+        "yellow", "pink", "cyan"), xlab = "Cut",
+        ylab = "Conditional probability of clarity") 
+```
+
+Долният barplot показва каква е вероятността, ако знаем чистотата да
+имаме някоя от шлифовките. Както се вижда колкото по-чист ни е диамантът
+толкова по-вероятно е да е с по-хубава шлифовка. Колкото по-мръсен е
+вероятностите за качествена и некачествена шлифовка са доста по-близки.
+Вижда се все пак, че дори от най-замърсените диаманти можеш да получиш
+идеална шлифовка, което също е интересно.
+
+```{r}
+barplot(prop.table(table(diamonds$cut, diamonds$clarity), 2), legend = T, 
+        beside = T, col = c( "black", "green", "yellow", "purple", "pink"),
+        xlab = "Clarity", ylab = "Conditional probability of cut") 
+```
+
+#### в)
+
+Долната графика покзва каратите на диамантите и съответната им цена
+разпределени в 2d равнина. От нея се вижда, че са зависи, както и може
+да се начертае проста линейна регресия, която да описва връзката между
+данните.
+
+```{r}
+plot(diamonds$price, diamonds$carat, xlab = "Price", ylab = "Carat")
+l = lm(carat ~ price, data = diamonds)
+abline(l)
+```
+
+#### г)
+
+Oт трите диаграми се вижда, че чистотата влияе най-силно на цената.
+Най-скъпи са чистите диаманти. Интересно е, че ако включа и диамантите
+под 1 карат диаграмите изглеждаха доста различно и беше много странно,
+защото тогава цветът, като че ли играеше основна роля. Колко е чист
+диаманта почти не беше от значение. Даже най-чистите бяха доста нодолу
+според boxplot-а(разбира се с много outliers)
+
+```{r}
+caratsMoreThan1 <- diamonds[diamonds$carat > 1,]
+
+plot(caratsMoreThan1$color, caratsMoreThan1$price, xlab = "Color", ylab = "Price")
+plot(caratsMoreThan1$clarity, caratsMoreThan1$price, xlab = "Clarity", ylab = "Price")
+plot(caratsMoreThan1$cut, caratsMoreThan1$price, xlab = "Cut", ylab = "Price")
+```
+
+### Задача 3
+
+#### а)
+
+i не се ползва. По-долу обяснявам защо. Реших да си поиграя с функции от
+по-висок ред общо взето
+
+```{r}
+add1 <- function (x, i) {
+    x <- x + 1
+}
+```
+
+Изпълнение на един опит. По подразбиране следва точно описания в
+условието алгоритъм:
+
+```{r}
+attempts = 10000
+
+draw <- function(whiteNum = 2, blackBalls = 2, ballNum = 4, N = 20, fn = add1, result = 0) {
+    for (i in 1:N) {
+        ball <- sample(c("white", "black"), 1, 
+                    prob = c(whiteNum/ballNum, blackBalls/ballNum))
+        if(ball == "white") {
+            whiteNum <- whiteNum + 2
+            ballNum  <- ballNum + 2
+            result <- fn(result, i)
+        } else {
+            blackBalls <- blackBalls + 1
+            ballNum  <- ballNum + 1
+        }
+    }
+
+    result
+}
+```
+
+Резултати от attempts брой опита. Записваме на всеки опит колко бели
+топки сме извадили в списък
+
+```{r}
+whiteBalls <- 1:attempts %>%
+    map(~draw()) %>%
+    unlist()
+```
+
+Функция смятаща емпиричната вероятност.
+
+```{r}
+eProb <- function(n, whiteBalls, attempts) {
+    sum(whiteBalls == n)/attempts
+}
+```
+
+Емпиричната вероятност X = 15
+
+```{r}
+eProb(15, whiteBalls, attempts)
+```
+
+Емпиричната вероятност X \< 10
+
+```{r}
+sum(whiteBalls < 10)/attempts
+```
+
+#### б) 
+
+Смятаме разпределението на X и после медианата и квантилите
+
+```{r}
+xDistribution <- 0:20 %>%
+    map(~eProb(.x, whiteBalls, attempts)) %>%
+    unlist()
+
+median(xDistribution)
+quantile(xDistribution)
+```
+
+#### в)
+
+Индексът - 1 съвпада с броя извадени бели топки. Взимаме на кой индекс е
+максималната вероятност. И получаваме най-вероятния брой бели топки
+Отдолу добавих и самата вероятност. -1 е, защото R индексира от 1
+
+```{r}
+which.max(xDistribution) - 1
+max(xDistribution)
+```
+
+#### г)
+
+Теглили сме 2 черни топки и 0 бели. Значи сме с +2 черни топки. Tоест
+имаме 4 черни и 2 бели и общо 6 топки. Ще симулирам само последните
+тегления. Започваме от 2
+
+Ползвам функции от по-висок ред,да намаля повтарянето на код. Затова
+fifthBall и add1 приемат бонус ненужен аргумент, което не е много добре
+от гледна точка качество на код, ама върши работа
+
+Тук гледаме дали на третото теглене се вика тази функция. Ако се вика,
+то петата изтеглена топка е бяла, защото в този случай се вика функцията
+i == 3, защото вече сме теглили два пъти. Общо взето слага стойността на
+result на TRUE, ако при последното теглене получим бяла.
+
+```{r}
+fifthBall <- function (x, i) {
+    i == 3   
+}
+```
+
+Резултатите от опитите ги слагам в списък
+
+```{r}
+fifthIsWhite <- 1:attempts %>%
+    map(~draw(2, 4, 6, 3, fifthBall, FALSE)) %>%
+    unlist()
+```
+
+Виждам броя пъти, в които петата топка е била бяла и деля на броя опити
+и получавам емпиричната вероятност.
+
+```{r}
+sum(fifthIsWhite)/attempts
+```
+
+#### д)
+
+Общо взето умножавам на всеки ход по вероятността да извадим бяла топка
+и добавям двете нови бели топки. Вероятността за даден ход е броя бели
+топки на този ход делено на общия брой топки за хода. Най-отдолу се
+вижда, че теоритичната и получената емпирична вероятност са доста
+близки.
+
+```{r}
+tProb <- 1
+whiteNum <- 2
+ballNum <- 4
+for (i in 1:20) {
+    tProb <- tProb * whiteNum/ballNum
+    
+    whiteNum <- whiteNum + 2
+    ballNum <- ballNum + 2
+}
+
+tProb
+eProb(20, whiteBalls, attempts)
+```
