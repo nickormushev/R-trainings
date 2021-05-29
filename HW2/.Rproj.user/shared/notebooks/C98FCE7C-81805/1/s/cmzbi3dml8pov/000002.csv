@@ -1,1 +1,0 @@
-"0","non_smokers <- birthwt[birthwt$smoke == F, ]"

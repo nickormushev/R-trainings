@@ -1,2 +1,0 @@
-"0","non_smokers_low_babies <- sum(non_smokers$low == T)"
-"0","non_smoker_count <- nrow(non_smokers)"

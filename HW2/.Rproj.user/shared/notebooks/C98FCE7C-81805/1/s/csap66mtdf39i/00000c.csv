@@ -1,3 +1,0 @@
-"0","barplot(prop.table(table(birthwt$low, birthwt$smoke), 2),"
-"0","        legend = T, names.arg = c(""Does not smoke"", ""Smokes""),"
-"0","        legend.text = c(""baby does not have low weight"", ""baby has low weight""), beside = T)"

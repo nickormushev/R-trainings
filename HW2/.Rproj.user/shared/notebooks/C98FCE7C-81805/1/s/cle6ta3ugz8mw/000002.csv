@@ -1,4 +1,0 @@
-"0","x_2 <- simulated_observations[2] %>%"
-"0","    unlist()"
-"0",""
-"0","y <- x_1 / (x_1 + x_2)"
