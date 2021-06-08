@@ -68,7 +68,7 @@ sameBirthday2()
 #Task 2
 #sample is a random generator
 sample(1:6, 6) # throw 6 times withour repeating
-sample(1:6, 100, replace = TRUE) 
+sample(1:6, 100, replace = TRUE)
 #throwing 100 times without repeating 1:6
 #is impossible so we give replace = TRUE which allows results to repeat
 
@@ -106,7 +106,7 @@ N <- 10000
     cummean() %>%
     plot(type = "l")
 
-#cummean is like cumsum. First place is the mean of the first element. 
+#cummean is like cumsum. First place is the mean of the first element.
 #Then the second and first. After that
 #the mean of the first three etc
 abline(h = 1/6, col = "red")

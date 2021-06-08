@@ -13,7 +13,7 @@ lm(pulse ~ age) %>%
     summary()
 
 t_stat <- (-0.79773 - (-1)) / 0.06996
-df_count <- nrow(t_stat) - 2
+df_count <- nrow(age) - 2
 pt(t_stat, df = 13, lower.tail = F)
 
 t.test(z)

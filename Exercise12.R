@@ -77,7 +77,8 @@ mtcars %>%
 
 #Можем да видим R^2 дали расте
 #между горното и долното, където
-#сме добавили cyl. Това може да
+#сме добавили cyl. Това може да ни е индикатор
+#колко добър ни е моделът
 lm(mpg ~ wt, data = scaled_mtcars) %>%
     summary()
 
@@ -95,14 +96,16 @@ paste0("alabala-", "xxxx")
 #кои променливи подобряват модела.
 #примерно horsepower подобряват модел
 scaled_mtcars %>%
-    select(-mpg) %>%
+    dplyr::select(-mpg) %>%
     imap(
         ~paste0("mpg~ ", .y) %>%
         as.formula() %>%
         lm(data = scaled_mtcars) %>%
         summary() %>%
         .$r.squared
-    )
+    ) %>%
+    unlist() %>%
+    sort()
 
 model  <- lm(mpg ~ wt + cyl + hp, data = mtcars)
 model_summary  <- summary(lm(mpg ~ wt + cyl + hp, data = mtcars))
@@ -121,8 +124,8 @@ test_idx <- -train_idx
 train_set  <-  scaled_mtcars[train_idx, ]
 test_set <- scaled_mtcars[test_idx, ]
 
-model1  <- lm(mpg ~ wt + cyl + hp, data = mtcars)
-model2  <- lm(mpg ~ wt + cyl + hp + disp, data = mtcars)
+model1  <- lm(mpg ~ wt + cyl + hp, data = scaled_mtcars)
+model2  <- lm(mpg ~ wt + cyl + hp + disp, data = scaled_mtcars)
 
 predicted <- predict.lm(model1, test_set)
 actual  <- test_set$mpg
@@ -130,16 +133,27 @@ actual  <- test_set$mpg
 #Това дава грешката. Може да го направим за model2 и да ги сравним така
 mean(abs(predicted - actual))
 
+predicted <- predict.lm(model2, test_set)
+actual  <- test_set$mpg
+mean(abs(predicted - actual))
 
 #Task 2
 heights <- read.csv("./Height.txt", sep = "\t")
 
 colnames(heights)
 
+#Голяма корелация между променливите има
+cor(heights$Height, heights$momheight)
+cor(heights$Height, heights$dadheight)
+
 heights_cm <- heights * 2.45
 
-model <- lm(Height ~ ., data = heights_cm) %>%
+#Голяма корелация между променливите има
+lm(Height ~ ., data = heights_cm) %>%
             summary()
+
+model <- lm(Height ~ ., data = heights_cm)
+
 
 #Това е идеята, ама имам неякакъв бъг
 predict.lm(
@@ -168,6 +182,7 @@ plot(galileo)
 #намаля без height^2
 model <- lm(distance ~ height + I(height ^ 2), data = galileo) %>%
     summary()
+
 
 plot(galileo)
 #type p e points, b e за точки и линия, l е за линия

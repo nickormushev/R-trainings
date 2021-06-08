@@ -220,7 +220,7 @@ barplot(prop.table(table(survey$Smoke, survey$Sex), 2), beside = TRUE, legend = 
 #The below shows how many people of each kind we have. The above shows the probability of
 #a certain person being a smoker
 barplot(table(survey$Sex, survey$Smoke), beside = TRUE, legend = TRUE)
-pie(prop.table(table(survey$Smoke, survey$Sex),2))
+pie(prop.table(table(survey$Smoke, survey$Sex), 2))
 
 #Returns possible values of Smoke/levels
 levels(survey$Smoke)
@@ -229,14 +229,14 @@ levels(survey$Smoke) <- levels(survey$Smoke)[c(2,3,4,1)]
 
 #ggplot - library for graphics. Install ggplot to test below
 #I think something is wrong for the text below
-survey[!is.na(survey$Sex) & !is.na(survey$Smoke),] %>% 
+survey[!is.na(survey$Sex) & !is.na(survey$Smoke), ] %>%
     ggplot(mapping = aes(x = Smoke, group = Sex, fill = Sex))
         + geom_bar(position = "dodge")
         + theme_dark()
 
 
-survey$AgeCategory <- ifelse(survey$Age < 20, 
-                             "A", 
+survey$AgeCategory <- ifelse(survey$Age < 20,
+                             "A",
                              ifelse (survey$Age < 25, "B", "C"))
 
 pie(table(survey$AgeCategory))

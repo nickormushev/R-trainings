@@ -1,5 +1,5 @@
 mean(1:100)
-#varaince explained: 
+#varaince explained:
 #http://www.r-tutor.com/elementary-statistics/numerical-measures/variance
 var(1:100)
 

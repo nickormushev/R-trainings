@@ -25,7 +25,6 @@ exam_results %>%
     lm() %>%
     anova()
 
-
 #kruskal.test, ако не са нормално разпределени данните
 kruskal.test(values ~ ind, data = stack(exam_results))
 
@@ -64,8 +63,7 @@ drug_data <- read.csv("./drug.csv")
 aov(response ~ drug + Error(patient), data = drug_data) %>%
     summary()
 
-
-#Задача 3
+#Задача 4
 iris %>%
     manova(cbind(Sepal.Width, Sepal.Length) ~ Species, data = .) %>%
     summary.aov()

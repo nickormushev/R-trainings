@@ -26,23 +26,26 @@ qnorm(p = 0.975, mean = 176, sd = 10)
 n <- 20
 x <- rnorm(n = 20, mean = 3, sd = 2)
 m <- mean(x)
+#Известното стандартно отклонение
 sigm <- 2
+#Неизвестното стандартно отклонение
 s <- sd(x)
 
 #95% доверителен интервал е когато остава по средата на нормалното
 #разпределение 95% лице
 #интервал на достоверност е percent confidence interval
-
 qs <- qnorm(p = 0.975)
 
 #manual calculation of percent confidence interval
 c(m - (qs * sigm) / sqrt(n), m + (qs * sigm) / sqrt(n))
-c(m - (qs * s) / sqrt(n), m + (qs * s) / sqrt(n))
 hist(rt(1000, df = 19), breaks = 40)
 
 #rt and qt are t distributions
 #Извадка от стандартно отклонение sqrt(1/(n-1) * sum((x - avg(x))^2) = s
+#Когато е неизвестно стандартното отклонение имаме t разпределение
+#и използваме
 q <- qt(p = 0.975, df = n - 1)
+c(m - (q * s) / sqrt(n), m + (q * s) / sqrt(n))
 
 
 #generates percent confidence inteval
@@ -59,6 +62,7 @@ sim <- function () {
 
     #df is degrees of freedom
     q <- qt(p = 0.975, df = n - 1)
+    #3 понеже 3 е очакването. Гледаме колко често е в интервала
     between(3, m - (q * s) / sqrt(n), m + (q * s) / sqrt(n))
     #we can use t.test
 }
