@@ -13,10 +13,9 @@ lm(pulse ~ age) %>%
     summary()
 
 t_stat <- (-0.79773 - (-1)) / 0.06996
-df_count <- nrow(age) - 2
-pt(t_stat, df = 13, lower.tail = F)
-
-t.test(z)
+d <- length(age) - 2
+pval <- 2 * pt(t_stat, df = d, lower.tail = F)
+pval
 
 #С долната команда виждаме най-ниския, максималния,
 #и средния пулс на човек на съответно 30 40 и 50 години

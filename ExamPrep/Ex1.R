@@ -201,7 +201,6 @@ sum(rbinom(1000, 30, 1/6) < 5)/1000
 qbinom(0.75, 30, prob = 1/6, lower.tail = F)
 pbinom(3, 30, prob = 1/6, lower.tail = F)
 
-
 #Ex 5 Task 2
 dnbinom(5, 3, prob = 0.2)
 pnbinom(3, 3, prob = 0.2, lower.tail = F)
@@ -230,7 +229,6 @@ emp
 probs
 
 g <- rbind(emp, probs)
-
 barplot(g, beside = T)
 
 #Ex 5 Task 4
@@ -252,7 +250,6 @@ quantile(x)
 qgeom(c(0, 0.25, 0.50, 0.75, 1), prob = 4/52)
 
 c <- table(x)
-
 
 #Exercise 6 Task 1
 #a)
@@ -295,12 +292,11 @@ x <- seq(0,15, by = 0.02)
 y <- dgamma(x, 5, 1)
 lines(x, y, col = 'blue')
 
-
 #e)
 x <- rnorm(100, 1, sqrt(2))
 y <- rnorm(100, 5, sqrt(2))
 
-x <- append(x, y)
+x <- cbind(x, y)
 
 hist(x)
 boxplot(x)
@@ -387,8 +383,15 @@ wilcox.test(meanData, conf.level = 0.95, conf.int = T)
 
 prop.table(table(survey$Smoke, survey$Sex))[2,2]
 
+#Ex7 Task 6
+men <- survey[survey$Sex == "Male", ]
+men <- men[!is.na(men$Smoke), ]
+nrow(men)
+sum(men$Smoke == "Never")
 
-#Ex 8 Task 1
+prop.test(89, 117, conf.level = 0.90)
+
+#Ex8 Task 1
 #Test with 10, 30, 100
 x <- rnorm(100, 2, 2)
 
@@ -426,7 +429,6 @@ sum(men$Smoke == "Never")
 nrow(men)
 
 prop.test(89, 117, p = 0.8, alternative = "less")
-
 
 #Ex9 Task 1
 x <- c(4, 1, 7, 9)
@@ -581,3 +583,60 @@ library('UsingR')
 colnames(homeprice)
 lm(sale ~ ., homeprice %>% dplyr::select(-list)) %>% summary()
 lm(sale ~ 0 +., homeprice %>% dplyr::select(-list)) %>% summary()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+mtcars %>%
+  dplyr::select(-mpg) %>%
+  imap(~cov(mtcars$mpg, .x)) %>%
+  unlist() %>%
+  sort(decreasing = T)
+
+lm(mpg ~ disp + cyl + wt + hp, mtcars) %>%
+  summary()
+
+galileo <- data.frame(
+  height = c(100,200,300,450,600,800,1000),
+  dist = c(253,337,395,451,495,534,574)
+)
+
+m <- lm(dist ~ height + I(height^2), galileo) %>% summary()
+
+plot(galileo)
+lines(galileo, fitted(m), type = "b")
+
+
+x <- data.frame(
+  age = c(18,23,25,35,65,54,34,56,72,19,23,42,18,39,37),
+  pulse = c(202,186,187,180,156,169,174,172,153,199,193,174,198,183,178)
+)
+
+lm(pulse ~ age, x) %>% summary()
+
+t <- ((+1) + (-0.79773)) / 0.06996
+n <- length(x$age) - 2
+pval <- 2 * pt(t, df = n, lower.tail = F)

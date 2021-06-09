@@ -23,10 +23,30 @@ for (i in 1:n) {
 correct_sum / n
 
 library(mlbench)
+data(BreastCancer)
 
-for (var in colnames(BreastCancer)[-c(1, 7, 11)]) {
+train_idx <- sample(1:nrow(BreastCancer), size = nrow(BreastCancer) * 0.7)
+train <- BreastCancer[train_idx, ]
+test <- BreastCancer[-train_idx, ]
+test
+m <- glm("Class ~ Cl.thickness" , train, family = "binomial")
+p <- predict.glm(m, newdata = test, type = "response")
 
+v <- 0
+correctBest <- 0
+
+for (i in colnames(BreastCancer)[-c(1, 7, 11)]) {
+    f <- as.formula(paste0("Class ~ ", i))
+    m <- glm(f, train, family = "binomial")
+
+    p <- ifelse(predict.glm(m, newdata = test, type = "response") > 0.5, "malignant", "benign")
+    correct <- sum(p == test$Class)
+    if(correct > correctBest) {
+        correctBest <- correct
+        v <- i
+    }
 }
+v
 
 # зареждане на пакета и данните
 library("mlbench")

@@ -28,9 +28,10 @@ some_vector[mask]
 some_vector[some_vector %% 2 == 0]
 
 #matrices
-myMatrix <- matrix(data = 1:9, nrow = 3, ncol = 3)
-myMatrix[3,2]                          # 
+myMatrix <- matrix(data = 1:9, nrow = 3, ncol = 3, byrow = T)
+myMatrix[3,2]                          
 myMatrix
+myMatrix[order(myMatrix[,1], myMatrix[ , 2]), ]
 
 #Get last row
 myMatrix[3,]

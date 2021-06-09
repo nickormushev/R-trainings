@@ -1,0 +1,6 @@
+geom_histogram
+geom_boxplot
+geom_bar
+geom_line
+geom_density
+geom_abline

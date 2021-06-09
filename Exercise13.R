@@ -4,7 +4,6 @@
 #Заплата и учене как се влияят от университет
 #aov - гледа за различни пациенти как влияят лекарства.
 #Може за един пациент да има няколко реда
-
 library("tidyverse")
 
 #Задача 1
@@ -16,6 +15,9 @@ exam_results <- data.frame(
 
 qqnorm(exam_results$examinor1)
 qqline(exam_results$examinor1)
+shapiro.test(exam_results$examinor1)
+shapiro.test(exam_results$examinor2)
+shapiro.test(exam_results$examinor3)
 
 #Първо гледаме дали предположенията за модела са валидни
 #нормални ли са данните. Отговор да
@@ -53,8 +55,8 @@ InsectSprays %>%
 #май защото има няколко нормално разпределени
 
 InsectSprays %>%
-lm() %>%
-anova()
+    lm() %>%
+    anova()
 
 #Задача 3
 drug_data <- read.csv("./drug.csv")
